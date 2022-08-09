@@ -1,4 +1,4 @@
-package com.mirfanrafif.siwarung.productlist
+package com.mirfanrafif.siwarung.view.productlist
 
 import android.Manifest
 import android.content.pm.PackageManager

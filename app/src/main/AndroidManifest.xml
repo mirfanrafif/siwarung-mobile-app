@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mirfanrafif.siwarung">
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
@@ -20,14 +21,19 @@
         android:theme="@style/Theme.Siwarung"
         tools:targetApi="31">
         <activity
-            android:name=".productlist.MainActivity"
-            android:exported="true">
+            android:name=".view.login.LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.productlist.MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

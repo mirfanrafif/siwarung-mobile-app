@@ -1,5 +1,6 @@
-package com.mirfanrafif.siwarung.core.data.remote
+package com.mirfanrafif.siwarung.core.data.remote.services
 
+import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequest
 import com.mirfanrafif.siwarung.core.data.remote.responses.AddTransactionResponse
 import com.mirfanrafif.siwarung.core.data.remote.responses.ListProductResponse
 import retrofit2.http.Body

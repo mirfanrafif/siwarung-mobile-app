@@ -1,57 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="8dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
     <TextView
         android:id="@+id/tv_pesanan_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pesanan"
         android:layout_margin="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="20sp"
+        android:text="Pesanan"
         android:textColor="@color/black"
-        android:textStyle="bold"/>
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_cart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:nestedScrollingEnabled="true"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_cart_total"
         app:layout_constraintTop_toBottomOf="@id/tv_pesanan_label"
         tools:itemCount="3"
         tools:layout_editor_absoluteX="8dp"
-        android:layout_marginBottom="8dp"
         tools:listitem="@layout/item_cart" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_empty_cart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/food" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/empty_cart"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"/>
+    </LinearLayout>
+
+
+
 
     <TextView
         android:id="@+id/tv_cart_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/btn_bayar"
-        tools:text="Rp30.000"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="16sp"
         android:layout_margin="8dp"
         android:layout_marginTop="16dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@color/black"/>
+        app:layout_constraintBottom_toTopOf="@id/btn_bayar"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Rp30.000" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_bayar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_total"
         android:text="Bayar"
-        android:id="@+id/btn_bayar"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:layout_margin="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:animateLayoutChanges="true"
-    tools:context=".productlist.ProductListFragment">
+    tools:context=".view.productlist.ProductListFragment">
 
     <Spinner
         android:id="@+id/sp_category"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="56dp"
         android:layout_margin="8dp"
         android:contentDescription="@string/menu_category"
         android:background="@drawable/bg_edittext"

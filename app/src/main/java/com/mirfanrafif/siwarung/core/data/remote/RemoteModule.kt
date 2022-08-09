@@ -1,5 +1,7 @@
 package com.mirfanrafif.siwarung.core.data.remote
 
+import com.mirfanrafif.siwarung.core.data.remote.services.MenuService
+import com.mirfanrafif.siwarung.core.data.remote.services.UserService
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -27,4 +29,7 @@ class RemoteModule {
 
     @Provides
     fun provideMenuService(retrofit: Retrofit): MenuService = retrofit.create(MenuService::class.java)
+
+    @Provides
+    fun provideUserService(retrofit: Retrofit): UserService = retrofit.create(UserService::class.java)
 }

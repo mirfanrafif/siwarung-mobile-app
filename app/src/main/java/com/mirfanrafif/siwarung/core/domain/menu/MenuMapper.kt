@@ -1,7 +1,7 @@
 package com.mirfanrafif.siwarung.core.domain.menu
 
-import com.mirfanrafif.siwarung.core.data.remote.TransactionDetailRequest
-import com.mirfanrafif.siwarung.core.data.remote.TransactionRequest
+import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionDetailRequest
+import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequest
 import com.mirfanrafif.siwarung.core.data.remote.responses.ProductResponse
 
 object MenuMapper {

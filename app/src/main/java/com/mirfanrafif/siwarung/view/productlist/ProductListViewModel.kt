@@ -1,4 +1,4 @@
-package com.mirfanrafif.siwarung.productlist
+package com.mirfanrafif.siwarung.view.productlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -41,6 +41,33 @@ class ProductListViewModel @Inject constructor(private val menuUseCase: MenuUseC
                 cart[index].count++
             }else{
                 cart.add(Cart(product, 1))
+            }
+
+            _cart.postValue(cart)
+        }
+    }
+
+    fun addCount(product: Product) {
+        val cart = _cart.value
+        if(cart != null) {
+            val findCart = cart.find { item -> item.product.id == product.id }
+            if(findCart != null) {
+                val index = cart.indexOf(findCart)
+                cart[index].count++
+            }
+
+            _cart.postValue(cart)
+        }
+    }
+
+    fun subsCount(product: Product) {
+        val cart = _cart.value
+        if(cart != null) {
+            val findCart = cart.find { item -> item.product.id == product.id }
+            if(findCart != null) {
+                val index = cart.indexOf(findCart)
+                cart[index].count--
+                if(cart[index].count == 0) cart.removeAt(index)
             }
 
             _cart.postValue(cart)

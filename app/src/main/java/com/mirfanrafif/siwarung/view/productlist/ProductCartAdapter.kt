@@ -1,4 +1,4 @@
-package com.mirfanrafif.siwarung.productlist
+package com.mirfanrafif.siwarung.view.productlist
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class ProductCartAdapter() :
+class ProductCartAdapter(private val viewModel: ProductListViewModel) :
     RecyclerView.Adapter<ProductCartAdapter.ProductCartViewHolder>() {
 
     private val cartList: ArrayList<Cart> = arrayListOf()
@@ -32,7 +32,12 @@ class ProductCartAdapter() :
             binding.tvCartCount.text = "Jumlah: ${cart.count}"
             binding.tvCartItemTotal.text = CurrencyHelper.formatPrice(cart.product.price * cart.count)
             //TODO("Onclick tambah produk")
-
+            binding.btnCartAdd.setOnClickListener {
+                viewModel.addCount(cart.product)
+            }
+            binding.btnCartSubs.setOnClickListener {
+                viewModel.subsCount(cart.product)
+            }
             //TODO("Onclick kurangi produk")
         }
     }

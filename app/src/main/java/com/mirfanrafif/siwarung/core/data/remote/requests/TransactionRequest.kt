@@ -1,4 +1,4 @@
-package com.mirfanrafif.siwarung.core.data.remote
+package com.mirfanrafif.siwarung.core.data.remote.requests
 
 data class TransactionDetailRequest(
     val productId: Int,
