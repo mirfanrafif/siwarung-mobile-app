@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.productlist.MainActivity"
+            android:name=".view.productlist.ProductListActivity"
             android:exported="false" />
     </application>
 

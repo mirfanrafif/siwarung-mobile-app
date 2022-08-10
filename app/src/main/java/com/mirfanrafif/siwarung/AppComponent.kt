@@ -3,7 +3,7 @@ package com.mirfanrafif.siwarung
 import com.mirfanrafif.siwarung.core.di.CoreComponent
 import com.mirfanrafif.siwarung.di.AppModule
 import com.mirfanrafif.siwarung.di.AppScope
-import com.mirfanrafif.siwarung.view.productlist.MainActivity
+import com.mirfanrafif.siwarung.view.productlist.ProductListActivity
 import com.mirfanrafif.siwarung.view.productlist.ProductCartFragment
 import com.mirfanrafif.siwarung.view.productlist.ProductListFragment
 import com.mirfanrafif.siwarung.view.login.LoginActivity
@@ -25,7 +25,7 @@ interface AppComponent {
         fun create(coreComponent: CoreComponent): AppComponent
     }
 
-    fun inject(activity: MainActivity)
+    fun inject(activity: ProductListActivity)
 
     fun inject(fragment: ProductListFragment)
 

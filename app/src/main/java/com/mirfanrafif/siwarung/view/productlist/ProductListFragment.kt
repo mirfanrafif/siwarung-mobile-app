@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.activity.viewModels
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -32,7 +31,7 @@ class ProductListFragment : Fragment() {
     lateinit var factory: ViewModelFactory
 
     private val viewModel: ProductListViewModel by viewModels<ProductListViewModel>({
-        activity as MainActivity
+        activity as ProductListActivity
     }) {
         factory
     }

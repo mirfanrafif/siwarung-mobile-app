@@ -8,7 +8,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.material.snackbar.Snackbar
 import com.mirfanrafif.siwarung.SiwarungApp
 import com.mirfanrafif.siwarung.databinding.ActivityLoginBinding
-import com.mirfanrafif.siwarung.view.productlist.MainActivity
+import com.mirfanrafif.siwarung.view.productlist.ProductListActivity
 import com.mirfanrafif.siwarung.utils.Status
 import com.mirfanrafif.siwarung.utils.ViewModelFactory
 import javax.inject.Inject
@@ -28,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         (application as SiwarungApp).appComponent.inject(this)
         if(viewModel.checkSession()) {
-            startActivity(Intent(this, MainActivity::class.java).also { intent ->
+            startActivity(Intent(this, ProductListActivity::class.java).also { intent ->
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             })
         }
@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
                         binding.btnLogin.isEnabled = false
                     }
                     Status.SUCCESS -> {
-                        startActivity(Intent(this, MainActivity::class.java).also { intent ->
+                        startActivity(Intent(this, ProductListActivity::class.java).also { intent ->
                             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                         })
                     }

@@ -36,7 +36,7 @@ class ProductCartFragment : Fragment() {
     lateinit var factory: ViewModelFactory
 
     private val viewModel: ProductListViewModel by viewModels({
-        activity as MainActivity
+        activity as ProductListActivity
     }) {
         factory
     }
