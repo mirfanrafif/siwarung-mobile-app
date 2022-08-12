@@ -20,7 +20,9 @@ import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnection
 import com.google.android.material.snackbar.Snackbar
 import com.mirfanrafif.siwarung.SiwarungApp
 import com.mirfanrafif.siwarung.core.data.remote.responses.TransactionResponse
+import com.mirfanrafif.siwarung.databinding.DialogTransactionSuccessBinding
 import com.mirfanrafif.siwarung.databinding.FragmentProductCartBinding
+import com.mirfanrafif.siwarung.domain.entities.Cart
 import com.mirfanrafif.siwarung.utils.CurrencyHelper
 import com.mirfanrafif.siwarung.utils.Status
 import com.mirfanrafif.siwarung.utils.ViewModelFactory
@@ -65,7 +67,7 @@ class ProductCartFragment : Fragment() {
         binding.rvCart.layoutManager = LinearLayoutManager(context)
         if (activity != null) {
             viewModel.getCart().observe(viewLifecycleOwner) { cartlist ->
-                if(cartlist.isNotEmpty()) {
+                if(cartlist != null && cartlist.isNotEmpty()) {
                     binding.llEmptyCart.visibility = View.GONE
                     binding.rvCart.visibility = View.VISIBLE
                     adapter.setProductList(cartlist)
@@ -75,46 +77,52 @@ class ProductCartFragment : Fragment() {
                     val formattedTotal = CurrencyHelper.formatPrice(total)
                     binding.tvCartTotal.text = "Total: $formattedTotal"
                     binding.btnBayar.setOnClickListener {
-                        if (cartlist.isNotEmpty()) {
-                            viewModel.selesaiTransaksi().observe(viewLifecycleOwner) { resource ->
-                                when (resource.status) {
-                                    Status.LOADING -> {
-                                        binding.btnBayar.isEnabled = false
-                                    }
-                                    Status.SUCCESS -> {
-                                        val successDialog =
-                                            AlertDialog.Builder(requireActivity()).also {
-                                                it.setTitle("Berhasil melakukan transaksi")
-                                                it.setMessage("Silahkan cetak struk dengan menekan tombol dibawah")
-                                                it.setPositiveButton("Tutup") { dialog, _ ->
-                                                    dialog.cancel()
-                                                    viewModel.clearCart()
-                                                }
-                                                it.setNeutralButton("Cetak struk") { dialog, _ ->
-                                                    printStruk(resource.data!!)
-                                                    viewModel.clearCart()
-                                                }
-                                                it.setCancelable(false)
-                                            }
-                                        binding.btnBayar.isEnabled = true
-                                        successDialog.show()
-
-
-                                    }
-                                    Status.ERROR -> {
-                                        Snackbar.make(
-                                            binding.root,
-                                            "Gagal menyimpan transaksi",
-                                            Snackbar.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-                            }
-                        }
+                        simpanTransaksi(cartlist)
                     }
                 }else{
                     binding.llEmptyCart.visibility = View.VISIBLE
+                    val formattedTotal = CurrencyHelper.formatPrice(0)
+                    binding.tvCartTotal.text = "Total: $formattedTotal"
                     binding.rvCart.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    fun simpanTransaksi(cartlist: List<Cart>) {
+        if (cartlist.isNotEmpty()) {
+            viewModel.selesaiTransaksi().observe(viewLifecycleOwner) { resource ->
+                when (resource.status) {
+                    Status.LOADING -> {
+                        binding.btnBayar.isEnabled = false
+                    }
+                    Status.SUCCESS -> {
+                        val alertBinding = DialogTransactionSuccessBinding.inflate(layoutInflater)
+
+                        val successDialog =
+                            AlertDialog.Builder(requireActivity()).also {
+                                it.setView(alertBinding.root)
+                                it.setCancelable(false)
+                            }.create()
+                        alertBinding.btnCetakStruk.setOnClickListener {
+                            printStruk(resource.data!!)
+                        }
+                        alertBinding.btnTutup.setOnClickListener {
+                            successDialog.cancel()
+                            viewModel.clearCart()
+                        }
+                        binding.btnBayar.isEnabled = true
+                        successDialog.show()
+
+
+                    }
+                    Status.ERROR -> {
+                        Snackbar.make(
+                            binding.root,
+                            "Gagal menyimpan transaksi",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }
@@ -166,9 +174,9 @@ class ProductCartFragment : Fragment() {
                 val printer =
                     EscPosPrinter(BluetoothPrintersConnections.selectFirstPaired(), 203, 48f, 32)
 
-                var textToPrint = makeTextToPrint(transactionResponse)
+                val textToPrint = makeTextToPrint(transactionResponse)
                 Log.d("Text to print", textToPrint)
-//                printer.printFormattedText(textToPrint)
+                printer.printFormattedText(textToPrint)
             }
         }
     }

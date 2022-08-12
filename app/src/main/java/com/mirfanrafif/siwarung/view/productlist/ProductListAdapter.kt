@@ -2,14 +2,11 @@ package com.mirfanrafif.siwarung.view.productlist
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mirfanrafif.siwarung.core.domain.menu.Product
+import com.mirfanrafif.siwarung.domain.entities.Product
 import com.mirfanrafif.siwarung.databinding.ItemProductBinding
 import com.mirfanrafif.siwarung.utils.CurrencyHelper
-import java.text.NumberFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 class ProductListAdapter(val addProductToCart: (Product) -> Unit) :

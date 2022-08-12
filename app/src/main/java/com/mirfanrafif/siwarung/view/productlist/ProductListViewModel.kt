@@ -5,17 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.mirfanrafif.siwarung.core.data.remote.responses.TransactionResponse
-import com.mirfanrafif.siwarung.core.domain.menu.Cart
-import com.mirfanrafif.siwarung.core.domain.menu.Category
-import com.mirfanrafif.siwarung.core.domain.menu.MenuUseCase
-import com.mirfanrafif.siwarung.core.domain.menu.Product
+import com.mirfanrafif.siwarung.domain.entities.Cart
+import com.mirfanrafif.siwarung.domain.entities.Product
+import com.mirfanrafif.siwarung.domain.usecases.menu.MenuUseCase
+import com.mirfanrafif.siwarung.domain.usecases.user.getsession.GetSessionUseCase
 import com.mirfanrafif.siwarung.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ProductListViewModel @Inject constructor(private val menuUseCase: MenuUseCase): ViewModel() {
+class ProductListViewModel @Inject constructor(private val menuUseCase: MenuUseCase, private val getSessionUseCase: GetSessionUseCase): ViewModel() {
     fun getAllProducts(): LiveData<Resource<List<Product>>> = menuUseCase.getAllProducts().asLiveData()
 
     private val _category: MutableLiveData<String> = MutableLiveData()
@@ -30,8 +30,8 @@ class ProductListViewModel @Inject constructor(private val menuUseCase: MenuUseC
         _searchKeyword.postValue(newKeyword)
     }
 
-    private val _cart = MutableLiveData<ArrayList<Cart>>(arrayListOf())
-    fun getCart(): LiveData<ArrayList<Cart>> = _cart
+    private val _cart = MutableLiveData<ArrayList<Cart>?>(arrayListOf())
+    fun getCart(): LiveData<ArrayList<Cart>?> = _cart
     fun addProductToCart(product: Product) {
         val cart = _cart.value
         if(cart != null) {
@@ -82,5 +82,7 @@ class ProductListViewModel @Inject constructor(private val menuUseCase: MenuUseC
     fun clearCart() {
         _cart.postValue(arrayListOf())
     }
+
+    fun getWarung() = getSessionUseCase.getWarung()
 
 }

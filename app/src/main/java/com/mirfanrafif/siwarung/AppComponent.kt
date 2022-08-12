@@ -1,8 +1,8 @@
 package com.mirfanrafif.siwarung
 
 import com.mirfanrafif.siwarung.core.di.CoreComponent
-import com.mirfanrafif.siwarung.di.AppModule
-import com.mirfanrafif.siwarung.di.AppScope
+import com.mirfanrafif.siwarung.domain.di.AppModule
+import com.mirfanrafif.siwarung.domain.di.AppScope
 import com.mirfanrafif.siwarung.view.productlist.ProductListActivity
 import com.mirfanrafif.siwarung.view.productlist.ProductCartFragment
 import com.mirfanrafif.siwarung.view.productlist.ProductListFragment

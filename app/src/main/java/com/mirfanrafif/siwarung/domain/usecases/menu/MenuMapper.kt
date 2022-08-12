@@ -1,8 +1,11 @@
-package com.mirfanrafif.siwarung.core.domain.menu
+package com.mirfanrafif.siwarung.domain.usecases.menu
 
 import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionDetailRequest
 import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequest
 import com.mirfanrafif.siwarung.core.data.remote.responses.ProductResponse
+import com.mirfanrafif.siwarung.domain.entities.Cart
+import com.mirfanrafif.siwarung.domain.entities.Category
+import com.mirfanrafif.siwarung.domain.entities.Product
 
 object MenuMapper {
     fun mapResponseToDomain(response: ProductResponse?): Product {

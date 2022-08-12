@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">siwarung</string>
+    <string name="app_name">Siwarung</string>
     <string name="menu_category">Menu category</string>
     <string name="keranjang">Keranjang</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -7,4 +7,6 @@
     <string name="cart_add">+</string>
     <string name="empty_cart">Belum ada pesanan</string>
     <string name="login">Login</string>
+    <string name="transaksi_berhasil">Transaksi Berhasil</string>
+    <string name="transaksi_berhasil_desc">Berhasil melakukan transaksi. Silahkan cetak struk dengan menekan tombol dibawah</string>
 </resources>

@@ -5,8 +5,8 @@ import com.mirfanrafif.siwarung.core.data.remote.MenuRemoteDataSource
 import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequest
 import com.mirfanrafif.siwarung.core.data.remote.responses.StatusResponse
 import com.mirfanrafif.siwarung.core.data.remote.responses.TransactionResponse
-import com.mirfanrafif.siwarung.core.domain.menu.MenuMapper
-import com.mirfanrafif.siwarung.core.domain.menu.Product
+import com.mirfanrafif.siwarung.domain.usecases.menu.MenuMapper
+import com.mirfanrafif.siwarung.domain.entities.Product
 import com.mirfanrafif.siwarung.utils.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

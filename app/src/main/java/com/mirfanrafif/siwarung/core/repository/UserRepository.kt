@@ -56,4 +56,8 @@ class UserRepository @Inject constructor(
         return token.isNotBlank()
     }
 
+    override fun getWarung(): WarungEntity {
+        return local.getWarung()
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.mirfanrafif.siwarung.di
+package com.mirfanrafif.siwarung.domain.di
 
 import javax.inject.Scope
 

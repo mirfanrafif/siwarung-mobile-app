@@ -4,11 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mirfanrafif.siwarung.core.domain.menu.Cart
+import com.mirfanrafif.siwarung.domain.entities.Cart
 import com.mirfanrafif.siwarung.databinding.ItemCartBinding
 import com.mirfanrafif.siwarung.utils.CurrencyHelper
-import java.text.NumberFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -31,14 +29,12 @@ class ProductCartAdapter(private val viewModel: ProductListViewModel) :
             binding.tvCartItemPrice.text = CurrencyHelper.formatPrice(cart.product.price)
             binding.tvCartCount.text = "Jumlah: ${cart.count}"
             binding.tvCartItemTotal.text = CurrencyHelper.formatPrice(cart.product.price * cart.count)
-            //TODO("Onclick tambah produk")
             binding.btnCartAdd.setOnClickListener {
                 viewModel.addCount(cart.product)
             }
             binding.btnCartSubs.setOnClickListener {
                 viewModel.subsCount(cart.product)
             }
-            //TODO("Onclick kurangi produk")
         }
     }
 

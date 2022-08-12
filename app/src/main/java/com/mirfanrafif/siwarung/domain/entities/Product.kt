@@ -1,4 +1,4 @@
-package com.mirfanrafif.siwarung.core.domain.menu
+package com.mirfanrafif.siwarung.domain.entities
 
 data class Product(
     val id: Int,

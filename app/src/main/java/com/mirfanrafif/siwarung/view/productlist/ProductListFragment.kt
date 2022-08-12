@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mirfanrafif.siwarung.R
 import com.mirfanrafif.siwarung.SiwarungApp
-import com.mirfanrafif.siwarung.core.domain.menu.Category
-import com.mirfanrafif.siwarung.core.domain.menu.Product
 import com.mirfanrafif.siwarung.databinding.FragmentProductListBinding
+import com.mirfanrafif.siwarung.domain.entities.Category
+import com.mirfanrafif.siwarung.domain.entities.Product
 import com.mirfanrafif.siwarung.utils.Status
 import com.mirfanrafif.siwarung.utils.ViewModelFactory
 import java.text.NumberFormat
@@ -88,7 +88,7 @@ class ProductListFragment : Fragment() {
             }
 
             viewModel.getCart().observe(viewLifecycleOwner) { cartList ->
-                if (cartList.isNotEmpty()) {
+                if (cartList != null && cartList.isNotEmpty()) {
                     binding.llTotal.visibility = View.VISIBLE
                     binding.tvTotal.text = NumberFormat.getCurrencyInstance(
                         Locale("id", "ID")
@@ -100,7 +100,7 @@ class ProductListFragment : Fragment() {
                 }
             }
 
-            binding.edtSearchProduct.doOnTextChanged { text, start, before, count ->
+            binding.edtSearchProduct.doOnTextChanged { text, _, _, _ ->
                 Log.d(ProductListFragment::class.simpleName, "Teks: $text")
                 viewModel.setKeyword(text.toString())
             }
