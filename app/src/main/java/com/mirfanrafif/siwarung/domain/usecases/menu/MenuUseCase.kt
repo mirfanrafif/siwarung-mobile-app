@@ -10,4 +10,6 @@ interface MenuUseCase {
     fun getAllProducts(): Flow<Resource<List<Product>>>
 
     fun addTransactions(cartList: List<Cart>): Flow<Resource<TransactionResponse>>
+
+    fun addTransactions(cartList: List<Cart>, cash: Int): Flow<Resource<TransactionResponse>>
 }

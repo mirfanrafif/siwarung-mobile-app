@@ -17,4 +17,12 @@ class MenuInteractor @Inject constructor(private val repository: IMenuRepository
         val request = MenuMapper.mapCartToTransactionRequest(cartList)
         return repository.addTransactions(request)
     }
+
+    override fun addTransactions(
+        cartList: List<Cart>,
+        cash: Int
+    ): Flow<Resource<TransactionResponse>> {
+        val request = MenuMapper.mapCartToTransactionRequestV2(cartList, cash)
+        return repository.addTransactions(request)
+    }
 }

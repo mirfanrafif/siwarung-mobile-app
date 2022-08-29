@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnection
 import com.google.android.material.snackbar.Snackbar
 import com.mirfanrafif.siwarung.SiwarungApp
 import com.mirfanrafif.siwarung.core.data.remote.responses.TransactionResponse
+import com.mirfanrafif.siwarung.databinding.DialogJumlahBayarBinding
 import com.mirfanrafif.siwarung.databinding.DialogTransactionSuccessBinding
 import com.mirfanrafif.siwarung.databinding.FragmentProductCartBinding
 import com.mirfanrafif.siwarung.domain.entities.Cart
@@ -77,7 +79,7 @@ class ProductCartFragment : Fragment() {
                     val formattedTotal = CurrencyHelper.formatPrice(total)
                     binding.tvCartTotal.text = "Total: $formattedTotal"
                     binding.btnBayar.setOnClickListener {
-                        simpanTransaksi(cartlist)
+                        showDialogBayar(formattedTotal, total, cartlist)
                     }
                 }else{
                     binding.llEmptyCart.visibility = View.VISIBLE
@@ -89,9 +91,43 @@ class ProductCartFragment : Fragment() {
         }
     }
 
-    fun simpanTransaksi(cartlist: List<Cart>) {
+    private fun showDialogBayar(formattedTotal: String, total: Int, cartlist: List<Cart>) {
+        val alertBinding = DialogJumlahBayarBinding.inflate(layoutInflater)
+        alertBinding.tvDialogTotal.text = formattedTotal
+
+        alertBinding.edtJumlahBayar.doOnTextChanged { text, _, _, _ ->
+            if(text != null && text.isNotBlank()) {
+                val jumlahBayar = alertBinding.edtJumlahBayar.text.toString().toInt()
+                val kembalian = jumlahBayar - total
+                alertBinding.tvKembalian.text = CurrencyHelper.formatPrice(kembalian)
+            }
+        }
+
+        val hitungKembalianDialog =
+            AlertDialog.Builder(requireActivity()).also {
+                it.setView(alertBinding.root)
+                it.setCancelable(false)
+            }.create()
+        alertBinding.btnDialogBayar.setOnClickListener {
+            val jumlahBayar = alertBinding.edtJumlahBayar.text.toString().toInt()
+            if(jumlahBayar < total) {
+                alertBinding.edtJumlahBayar.error = "Jumlah bayar kurang"
+            }else{
+                alertBinding.edtJumlahBayar.error = null
+                hitungKembalianDialog.cancel()
+                simpanTransaksi(cartlist, jumlahBayar)
+            }
+
+        }
+        alertBinding.btnDialogBatal.setOnClickListener {
+            hitungKembalianDialog.cancel()
+        }
+        hitungKembalianDialog.show()
+    }
+
+    private fun simpanTransaksi(cartlist: List<Cart>, jumlahBayar: Int) {
         if (cartlist.isNotEmpty()) {
-            viewModel.selesaiTransaksi().observe(viewLifecycleOwner) { resource ->
+            viewModel.selesaiTransaksi(jumlahBayar).observe(viewLifecycleOwner) { resource ->
                 when (resource.status) {
                     Status.LOADING -> {
                         binding.btnBayar.isEnabled = false
@@ -128,7 +164,7 @@ class ProductCartFragment : Fragment() {
         }
     }
 
-    fun printStruk(transactionResponse: TransactionResponse) {
+    private fun printStruk(transactionResponse: TransactionResponse) {
         if (ContextCompat.checkSelfPermission(
                 requireActivity(),
                 Manifest.permission.BLUETOOTH
@@ -174,95 +210,95 @@ class ProductCartFragment : Fragment() {
                 val printer =
                     EscPosPrinter(BluetoothPrintersConnections.selectFirstPaired(), 203, 48f, 32)
 
-                val textToPrint = makeTextToPrint(transactionResponse)
+                val textToPrint = transactionResponse.receipt ?: ""
                 Log.d("Text to print", textToPrint)
                 printer.printFormattedText(textToPrint)
             }
         }
     }
-
-    private fun nameSplit(input: String, alignment: String, tag: String?): String {
-        val inputSplit = input.split(" ")
-        var output = ""
-        var wordCount = 0
-        inputSplit.forEach { s ->
-            if (tag != null && wordCount == 0) {
-                output += "<$tag>"
-            }
-            if((s.length + wordCount + 1) < 32) {
-                output += "$s "
-                wordCount += s.length + 1
-            }else{
-                if(tag != null) {
-                    output += "</$tag>"
-                }
-                output += "\n[$alignment]"
-                if(tag != null) {
-                    output += "<$tag>"
-                }
-                output += "$s "
-                wordCount = 0
-            }
-        }
-        if(tag != null) {
-            output += "</$tag>"
-        }
-        return output
-    }
-
-    private fun makeTextToPrint(transactionResponse: TransactionResponse): String {
-        val item = transactionResponse.details?.map {
-            var nameSplit = (it?.product?.name ?: "").split(" ")
-            val total = (it?.product?.price ?: 0) * (it?.count ?: 0)
-            var finalString = "[L]"
-            var wordCount = 0
-            var line = 1
-            nameSplit.forEach { s ->
-                if ((s.length + wordCount + 1) < 15) {
-                    finalString += "$s "
-                    wordCount += s.length
-                } else {
-                    if (line == 1) {
-                        finalString += "[R]${it?.count}[R]${
-                            CurrencyHelper.formatPrice(
-                                total
-                            )
-                        }"
-                    }
-                    finalString += "\n[L]$s "
-                    line++
-                    wordCount = 0
-                }
-            }
-            if (line == 1) {
-                finalString += "[R]${it?.count}[R]${
-                    CurrencyHelper.formatPrice(
-                        total
-                    )
-                }"
-            }
-
-            finalString += "\n[L]@${CurrencyHelper.formatPrice(it?.product?.price ?: 0)}\n[L]"
-            finalString
-        }?.reduce { acc, s -> acc + "\n" + s }
-        val transactionTotal = transactionResponse.details?.map {
-            (it?.product?.price ?: 0) * (it?.count ?: 0)
-        }?.reduce { acc, i -> acc + i }
-
-        return """[L]
-[C]${nameSplit(transactionResponse.warung?.name ?: "", "C", "b")}
-[C]${nameSplit(transactionResponse.warung?.address ?: "", "C", null)}
-[L]
-[C]================================
-[L]
-$item
-[C]--------------------------------
-[R]Total : ${CurrencyHelper.formatPrice(transactionTotal ?: 0)}
-[L]
-[C]================================
-[L]
-[C]<b>Terimakasih atas</b>
-[C]<b>Kunjungannya</b>
-[L]""".trimIndent()
-    }
+//
+//    private fun nameSplit(input: String, alignment: String, tag: String?): String {
+//        val inputSplit = input.split(" ")
+//        var output = ""
+//        var wordCount = 0
+//        inputSplit.forEach { s ->
+//            if (tag != null && wordCount == 0) {
+//                output += "<$tag>"
+//            }
+//            if((s.length + wordCount + 1) < 32) {
+//                output += "$s "
+//                wordCount += s.length + 1
+//            }else{
+//                if(tag != null) {
+//                    output += "</$tag>"
+//                }
+//                output += "\n[$alignment]"
+//                if(tag != null) {
+//                    output += "<$tag>"
+//                }
+//                output += "$s "
+//                wordCount = 0
+//            }
+//        }
+//        if(tag != null) {
+//            output += "</$tag>"
+//        }
+//        return output
+//    }
+//
+//    private fun makeTextToPrint(transactionResponse: TransactionResponse): String {
+//        val item = transactionResponse.details?.map { details ->
+//            var nameSplit = (details?.product?.name ?: "").split(" ")
+//            val total = (details?.product?.price ?: 0) * (details?.count ?: 0)
+//            var finalString = "[L]"
+//            var wordCount = 0
+//            var line = 1
+//            nameSplit.forEach { s ->
+//                if ((s.length + wordCount + 1) < 15) {
+//                    finalString += "$s "
+//                    wordCount += s.length
+//                } else {
+//                    if (line == 1) {
+//                        finalString += "[R]${details?.count}[R]${
+//                            CurrencyHelper.formatPrice(
+//                                total
+//                            )
+//                        }"
+//                    }
+//                    finalString += "\n[L]$s "
+//                    line++
+//                    wordCount = 0
+//                }
+//            }
+//            if (line == 1) {
+//                finalString += "[R]${details?.count}[R]${
+//                    CurrencyHelper.formatPrice(
+//                        total
+//                    )
+//                }"
+//            }
+//
+//            finalString += "\n[L]@${CurrencyHelper.formatPrice(details?.product?.price ?: 0)}\n[L]"
+//            finalString
+//        }?.reduce { acc, s -> acc + "\n" + s }
+//        val transactionTotal = transactionResponse.details?.map {
+//            (it?.product?.price ?: 0) * (it?.count ?: 0)
+//        }?.reduce { acc, i -> acc + i }
+//
+//        return """[L]
+//[C]${nameSplit(transactionResponse.warung?.name ?: "", "C", "b")}
+//[C]${nameSplit(transactionResponse.warung?.address ?: "", "C", null)}
+//[L]
+//[C]================================
+//[L]
+//$item
+//[C]--------------------------------
+//[R]Total : ${CurrencyHelper.formatPrice(transactionTotal ?: 0)}
+//[L]
+//[C]================================
+//[L]
+//[C]<b>Terimakasih atas</b>
+//[C]<b>Kunjungannya</b>
+//[L]""".trimIndent()
+//    }
 }

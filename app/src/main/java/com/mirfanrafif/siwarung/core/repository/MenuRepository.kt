@@ -3,6 +3,7 @@ package com.mirfanrafif.siwarung.core.repository
 import com.mirfanrafif.siwarung.core.data.local.UserLocalDataSource
 import com.mirfanrafif.siwarung.core.data.remote.MenuRemoteDataSource
 import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequest
+import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequestV2
 import com.mirfanrafif.siwarung.core.data.remote.responses.StatusResponse
 import com.mirfanrafif.siwarung.core.data.remote.responses.TransactionResponse
 import com.mirfanrafif.siwarung.domain.usecases.menu.MenuMapper
@@ -36,6 +37,22 @@ class MenuRepository @Inject constructor(private val remote: MenuRemoteDataSourc
     }.flowOn(Dispatchers.Default)
 
     override fun addTransactions(transactionRequest: TransactionRequest): Flow<Resource<TransactionResponse>> = flow {
+        emit(Resource.loading(TransactionResponse()))
+        val token = "Bearer " + userLocalDataSource.getToken()
+        val response = remote.addTransactions(token, transactionRequest).first()
+        if (response.status == StatusResponse.SUCCESS) {
+            emit(Resource.success(response.body))
+            return@flow
+        }
+        emit(
+            Resource.error(
+                "Gagal mengambil data dari API. ${response.message}",
+                TransactionResponse()
+            )
+        )
+    }.flowOn(Dispatchers.Default)
+
+    override fun addTransactions(transactionRequest: TransactionRequestV2): Flow<Resource<TransactionResponse>> = flow {
         emit(Resource.loading(TransactionResponse()))
         val token = "Bearer " + userLocalDataSource.getToken()
         val response = remote.addTransactions(token, transactionRequest).first()

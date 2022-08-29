@@ -1,6 +1,7 @@
 package com.mirfanrafif.siwarung.core.data.remote.services
 
 import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequest
+import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequestV2
 import com.mirfanrafif.siwarung.core.data.remote.responses.AddTransactionResponse
 import com.mirfanrafif.siwarung.core.data.remote.responses.ListProductResponse
 import retrofit2.http.Body
@@ -16,5 +17,11 @@ interface MenuService {
     suspend fun addTransactions(
         @Header("Authorization") token: String,
         @Body request: TransactionRequest
+    ): AddTransactionResponse
+
+    @POST("transactions-v2")
+    suspend fun addTransactions(
+        @Header("Authorization") token: String,
+        @Body request: TransactionRequestV2
     ): AddTransactionResponse
 }

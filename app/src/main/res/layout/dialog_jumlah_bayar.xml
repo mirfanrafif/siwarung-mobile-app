@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    >
+
+    <TextView
+        android:id="@+id/tv_dialog_total_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/total"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_dialog_total"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textAlignment="textEnd"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_dialog_total_label"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Rp. 13.000" />
+
+    <TextView
+        android:id="@+id/tv_dialog_jumlah_bayar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/jumlah_bayar"
+        app:layout_constraintStart_toStartOf="@+id/tv_dialog_total_label"
+        app:layout_constraintTop_toBottomOf="@+id/tv_dialog_total_label" />
+
+    <EditText
+        android:id="@+id/edt_jumlah_bayar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:hint="Contoh: 50000"
+        android:textAlignment="textEnd"
+        android:textSize="14sp"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_dialog_jumlah_bayar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_dialog_jumlah_bayar"
+        app:layout_constraintTop_toTopOf="@+id/tv_dialog_jumlah_bayar" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_jumlah_bayar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/kembalian"
+        android:id="@+id/tv_dialog_kembalian"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_kembalian"
+        tools:text="Rp. 0"
+        app:layout_constraintStart_toEndOf="@id/tv_dialog_kembalian"
+        app:layout_constraintTop_toTopOf="@id/tv_dialog_kembalian"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="textEnd"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginStart="16dp"
+        android:textSize="20sp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bayar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_kembalian"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_total"
+        android:textColor="@color/white"
+        android:id="@+id/btn_dialog_bayar"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Batal"
+        android:id="@+id/btn_dialog_batal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_dialog_bayar"
+        android:background="@drawable/bg_secondary"
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

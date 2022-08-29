@@ -74,9 +74,9 @@ class ProductListViewModel @Inject constructor(private val menuUseCase: MenuUseC
         }
     }
 
-    fun selesaiTransaksi(): LiveData<Resource<TransactionResponse>> {
+    fun selesaiTransaksi(jumlahBayar: Int): LiveData<Resource<TransactionResponse>> {
         val cart = _cart.value
-        return menuUseCase.addTransactions(cart!!).asLiveData()
+        return menuUseCase.addTransactions(cart!!, jumlahBayar).asLiveData()
     }
 
     fun clearCart() {

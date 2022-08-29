@@ -9,4 +9,8 @@
     <string name="login">Login</string>
     <string name="transaksi_berhasil">Transaksi Berhasil</string>
     <string name="transaksi_berhasil_desc">Berhasil melakukan transaksi. Silahkan cetak struk dengan menekan tombol dibawah</string>
+    <string name="jumlah_bayar">Jumlah Bayar</string>
+    <string name="total">Total</string>
+    <string name="kembalian">Kembalian</string>
+    <string name="bayar">Bayar</string>
 </resources>

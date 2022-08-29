@@ -9,3 +9,8 @@ data class TransactionRequest(
     val items: List<TransactionDetailRequest>
 )
 
+data class TransactionRequestV2(
+    val items: List<TransactionDetailRequest>,
+    val cash: Int
+)
+

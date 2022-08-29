@@ -2,6 +2,7 @@ package com.mirfanrafif.siwarung.core.data.remote
 
 import android.util.Log
 import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequest
+import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequestV2
 import com.mirfanrafif.siwarung.core.data.remote.responses.ApiResponse
 import com.mirfanrafif.siwarung.core.data.remote.responses.ProductResponse
 import com.mirfanrafif.siwarung.core.data.remote.responses.TransactionResponse
@@ -35,6 +36,24 @@ class MenuRemoteDataSource @Inject constructor(private val menuService: MenuServ
     }
 
     fun addTransactions(token: String, transactionRequest: TransactionRequest): Flow<ApiResponse<TransactionResponse>> {
+        return flow {
+            Log.d(MenuRemoteDataSource::class.simpleName, "Lewat sini")
+            try {
+                val response = menuService.addTransactions(token, transactionRequest)
+                val transactionResponse = response.data
+                if(transactionResponse != null) {
+                    emit(ApiResponse.success(transactionResponse))
+                }else{
+                    emit(ApiResponse.empty("Tidak ada produk/menu", TransactionResponse()))
+                }
+            }catch (e: Exception) {
+                e.printStackTrace()
+                emit(ApiResponse.error("Gagal mengambil produk. " + (e.message ?: ""), TransactionResponse()))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun addTransactions(token: String, transactionRequest: TransactionRequestV2): Flow<ApiResponse<TransactionResponse>> {
         return flow {
             Log.d(MenuRemoteDataSource::class.simpleName, "Lewat sini")
             try {

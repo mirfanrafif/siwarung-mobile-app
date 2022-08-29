@@ -2,6 +2,7 @@ package com.mirfanrafif.siwarung.domain.usecases.menu
 
 import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionDetailRequest
 import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequest
+import com.mirfanrafif.siwarung.core.data.remote.requests.TransactionRequestV2
 import com.mirfanrafif.siwarung.core.data.remote.responses.ProductResponse
 import com.mirfanrafif.siwarung.domain.entities.Cart
 import com.mirfanrafif.siwarung.domain.entities.Category
@@ -27,6 +28,16 @@ object MenuMapper {
         }
 
         return TransactionRequest(items)
+    }
 
+    fun mapCartToTransactionRequestV2(cartList: List<Cart>, cash: Int): TransactionRequestV2 {
+        val items = cartList.map { cart ->
+            TransactionDetailRequest(
+                productId = cart.product.id,
+                count = cart.count
+            )
+        }
+
+        return TransactionRequestV2(items, cash)
     }
 }
