@@ -88,13 +88,17 @@ class ProductListFragment : Fragment() {
             }
 
             viewModel.getCart().observe(viewLifecycleOwner) { cartList ->
+
                 if (cartList != null && cartList.isNotEmpty()) {
+                    adapter.setCart(cartList)
                     binding.llTotal.visibility = View.VISIBLE
                     binding.tvTotal.text = NumberFormat.getCurrencyInstance(
                         Locale("id", "ID")
                     ).also { it.maximumFractionDigits = 0 }
                         .format(cartList.map { it.product.price * it.count }
                             .reduce { acc, i -> acc + i })
+                } else if (cartList != null) {
+                    adapter.setCart(cartList)
                 } else {
                     binding.llTotal.visibility = View.GONE
                 }
@@ -106,14 +110,16 @@ class ProductListFragment : Fragment() {
             }
 
             binding.llTotal.setOnClickListener {
-                requireActivity().supportFragmentManager.beginTransaction().replace(R.id.wrapper, ProductCartFragment(), null).addToBackStack(null).commit()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.wrapper, ProductCartFragment(), null).addToBackStack(null)
+                    .commit()
             }
         }
     }
 
     override fun onStart() {
         super.onStart()
-        viewModel.getAllProducts().observe(viewLifecycleOwner) { productListResponse ->
+        viewModel.products.observe(viewLifecycleOwner) { productListResponse ->
             when (productListResponse.status) {
                 Status.LOADING -> {
                     binding.loadingProduct.visibility = View.VISIBLE

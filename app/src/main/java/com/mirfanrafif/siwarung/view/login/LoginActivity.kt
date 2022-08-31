@@ -28,9 +28,10 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         (application as SiwarungApp).appComponent.inject(this)
         if(viewModel.checkSession()) {
-            startActivity(Intent(this, ProductListActivity::class.java).also { intent ->
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            })
+            val intent = Intent(this, ProductListActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
         }
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -56,9 +57,10 @@ class LoginActivity : AppCompatActivity() {
                         binding.btnLogin.isEnabled = false
                     }
                     Status.SUCCESS -> {
-                        startActivity(Intent(this, ProductListActivity::class.java).also { intent ->
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        })
+                        val intent = Intent(this, ProductListActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        startActivity(intent)
+                        finish()
                     }
                     Status.ERROR -> {
                         binding.btnLogin.isEnabled = true

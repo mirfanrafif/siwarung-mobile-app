@@ -22,7 +22,22 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/contoh_gambar_menu_makanan"
             android:scaleType="centerCrop"/>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/tv_item_product_cart_count"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:padding="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_round_red"
+            tools:text="1"/>
 
         <TextView
             android:id="@+id/tv_item_name"

@@ -2,10 +2,12 @@ package com.mirfanrafif.siwarung.view.productlist
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mirfanrafif.siwarung.domain.entities.Product
 import com.mirfanrafif.siwarung.databinding.ItemProductBinding
+import com.mirfanrafif.siwarung.domain.entities.Cart
 import com.mirfanrafif.siwarung.utils.CurrencyHelper
 import kotlin.collections.ArrayList
 
@@ -16,6 +18,14 @@ class ProductListAdapter(val addProductToCart: (Product) -> Unit) :
     private val productListToShow: ArrayList<Product> = arrayListOf()
     private var category: String = "Semua Produk"
     private var keyword: String = ""
+
+    private val cartList: ArrayList<Cart> = arrayListOf()
+
+    fun setCart(newCart: List<Cart>) {
+        cartList.clear()
+        cartList.addAll(newCart)
+        notifyDataSetChanged()
+    }
 
     fun setProductList(newProductList: List<Product>) {
         productList.clear()
@@ -50,6 +60,11 @@ class ProductListAdapter(val addProductToCart: (Product) -> Unit) :
         fun bind(product: Product) {
             binding.tvItemName.text = product.name
             binding.tvItemPrice.text = CurrencyHelper.formatPrice(product.price)
+            val productInCart = cartList.find { cart -> cart.product.id == product.id }
+            if(productInCart != null) {
+                binding.tvItemProductCartCount.visibility = View.VISIBLE
+                binding.tvItemProductCartCount.text = productInCart.count.toString()
+            }
             binding.cardItemProduct.setOnClickListener {
                 addProductToCart(product)
             }

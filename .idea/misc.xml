@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/drawable/bg_edittext.xml" value="0.217" />
+        <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/drawable/bg_round_red.xml" value="0.2325" />
         <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/drawable/bg_secondary.xml" value="0.2375" />
         <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/drawable/bg_total.xml" value="0.3335" />
         <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/drawable/btn_background.xml" value="0.1745" />
@@ -17,7 +18,7 @@
         <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/layout/fragment_product_cart.xml" value="0.18" />
         <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/layout/fragment_product_list.xml" value="0.25" />
         <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/layout/item_cart.xml" value="0.25" />
-        <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/layout/item_product.xml" value="0.33" />
+        <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/layout/item_product.xml" value="0.3365461847389558" />
         <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/menu/list_product_action.xml" value="0.24131944444444445" />
         <entry key="..\:/Kerja/Android/Siwarung/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.282" />
       </map>
