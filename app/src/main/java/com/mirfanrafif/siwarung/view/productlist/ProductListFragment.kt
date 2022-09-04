@@ -15,9 +15,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.mirfanrafif.siwarung.R
 import com.mirfanrafif.siwarung.SiwarungApp
 import com.mirfanrafif.siwarung.databinding.FragmentProductListBinding
-import com.mirfanrafif.siwarung.domain.entities.Category
-import com.mirfanrafif.siwarung.domain.entities.Product
-import com.mirfanrafif.siwarung.utils.Status
+import com.mirfanrafif.siwarung.core.domain.entities.Category
+import com.mirfanrafif.siwarung.core.domain.entities.Product
+import com.mirfanrafif.siwarung.core.repository.Status
 import com.mirfanrafif.siwarung.utils.ViewModelFactory
 import java.text.NumberFormat
 import java.util.*
@@ -75,7 +75,7 @@ class ProductListFragment : Fragment() {
                     }
 
                     override fun onNothingSelected(p0: AdapterView<*>?) {
-                        TODO("Not yet implemented")
+
                     }
                 }
 
@@ -88,7 +88,6 @@ class ProductListFragment : Fragment() {
             }
 
             viewModel.getCart().observe(viewLifecycleOwner) { cartList ->
-
                 if (cartList != null && cartList.isNotEmpty()) {
                     adapter.setCart(cartList)
                     binding.llTotal.visibility = View.VISIBLE
@@ -127,8 +126,8 @@ class ProductListFragment : Fragment() {
                 Status.SUCCESS -> {
                     binding.loadingProduct.visibility = View.GONE
                     if (productListResponse.data != null) {
-                        adapter.setProductList(productListResponse.data)
-                        setSpinnerCategory(productListResponse.data)
+                        adapter.setProductList(productListResponse.data!!)
+                        setSpinnerCategory(productListResponse.data!!)
                     }
                 }
                 Status.ERROR -> {

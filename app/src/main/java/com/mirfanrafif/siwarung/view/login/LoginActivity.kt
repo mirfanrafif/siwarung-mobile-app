@@ -9,8 +9,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.mirfanrafif.siwarung.SiwarungApp
 import com.mirfanrafif.siwarung.databinding.ActivityLoginBinding
 import com.mirfanrafif.siwarung.view.productlist.ProductListActivity
-import com.mirfanrafif.siwarung.utils.Status
 import com.mirfanrafif.siwarung.utils.ViewModelFactory
+import com.mirfanrafif.siwarung.core.repository.Status
 import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {

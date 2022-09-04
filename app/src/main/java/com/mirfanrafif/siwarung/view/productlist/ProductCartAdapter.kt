@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mirfanrafif.siwarung.domain.entities.Cart
+import com.mirfanrafif.siwarung.core.domain.entities.Cart
 import com.mirfanrafif.siwarung.databinding.ItemCartBinding
 import com.mirfanrafif.siwarung.utils.CurrencyHelper
 import kotlin.collections.ArrayList
@@ -22,7 +22,7 @@ class ProductCartAdapter(private val viewModel: ProductListViewModel) :
     }
 
 
-    inner class ProductCartViewHolder(private val binding: ItemCartBinding, context: Context) :
+    inner class ProductCartViewHolder(private val binding: ItemCartBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(cart: Cart) {
             binding.tvCartItemName.text = cart.product.name
@@ -40,7 +40,7 @@ class ProductCartAdapter(private val viewModel: ProductListViewModel) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductCartViewHolder {
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductCartViewHolder(binding, parent.context)
+        return ProductCartViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ProductCartViewHolder, position: Int) {

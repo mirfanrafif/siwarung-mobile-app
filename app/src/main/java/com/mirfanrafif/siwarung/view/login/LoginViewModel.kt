@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.mirfanrafif.siwarung.core.data.local.entities.UserEntity
 import com.mirfanrafif.siwarung.core.data.remote.requests.LoginRequest
-import com.mirfanrafif.siwarung.domain.usecases.user.getsession.GetSessionUseCase
-import com.mirfanrafif.siwarung.domain.usecases.user.login.LoginUseCase
-import com.mirfanrafif.siwarung.utils.Resource
+import com.mirfanrafif.siwarung.core.domain.usecases.user.getsession.GetSessionUseCase
+import com.mirfanrafif.siwarung.core.domain.usecases.user.login.LoginUseCase
+import com.mirfanrafif.siwarung.core.repository.Resource
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(

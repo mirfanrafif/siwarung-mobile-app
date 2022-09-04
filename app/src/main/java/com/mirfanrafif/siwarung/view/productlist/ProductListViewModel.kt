@@ -2,25 +2,28 @@ package com.mirfanrafif.siwarung.view.productlist
 
 import androidx.lifecycle.*
 import com.mirfanrafif.siwarung.core.data.remote.responses.TransactionResponse
-import com.mirfanrafif.siwarung.domain.entities.Cart
-import com.mirfanrafif.siwarung.domain.entities.Product
-import com.mirfanrafif.siwarung.domain.usecases.menu.MenuUseCase
-import com.mirfanrafif.siwarung.domain.usecases.user.getsession.GetSessionUseCase
-import com.mirfanrafif.siwarung.utils.Resource
-import kotlinx.coroutines.flow.Flow
+import com.mirfanrafif.siwarung.core.domain.entities.Cart
+import com.mirfanrafif.siwarung.core.domain.entities.Product
+import com.mirfanrafif.siwarung.core.domain.usecases.menu.MenuUseCase
+import com.mirfanrafif.siwarung.core.domain.usecases.user.getsession.GetSessionUseCase
+import com.mirfanrafif.siwarung.core.repository.Resource
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ProductListViewModel @Inject constructor(private val menuUseCase: MenuUseCase, private val getSessionUseCase: GetSessionUseCase): ViewModel() {
-    val products: MutableLiveData<Resource<List<Product>>> = MutableLiveData()
+     val products: MutableLiveData<Resource<List<Product>>> = MutableLiveData()
 
     init {
-        menuUseCase.getAllProducts().onEach { productList ->
-            products.value = productList
-        }.launchIn(viewModelScope)
+        viewModelScope.launch {
+            menuUseCase.getAllProducts().collect { productList ->
+                products.value = productList
+            }
+        }
     }
 
     private val _category: MutableLiveData<String> = MutableLiveData()

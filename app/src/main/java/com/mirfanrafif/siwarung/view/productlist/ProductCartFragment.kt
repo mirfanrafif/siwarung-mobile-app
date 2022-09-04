@@ -24,9 +24,9 @@ import com.mirfanrafif.siwarung.core.data.remote.responses.TransactionResponse
 import com.mirfanrafif.siwarung.databinding.DialogJumlahBayarBinding
 import com.mirfanrafif.siwarung.databinding.DialogTransactionSuccessBinding
 import com.mirfanrafif.siwarung.databinding.FragmentProductCartBinding
-import com.mirfanrafif.siwarung.domain.entities.Cart
+import com.mirfanrafif.siwarung.core.domain.entities.Cart
+import com.mirfanrafif.siwarung.core.repository.Status
 import com.mirfanrafif.siwarung.utils.CurrencyHelper
-import com.mirfanrafif.siwarung.utils.Status
 import com.mirfanrafif.siwarung.utils.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -115,7 +115,9 @@ class ProductCartFragment : Fragment() {
             }else{
                 alertBinding.edtJumlahBayar.error = null
                 hitungKembalianDialog.cancel()
-                simpanTransaksi(cartlist, jumlahBayar)
+                if(cartlist.isNotEmpty()) {
+                    simpanTransaksi(jumlahBayar)
+                }
             }
 
         }
@@ -125,40 +127,38 @@ class ProductCartFragment : Fragment() {
         hitungKembalianDialog.show()
     }
 
-    private fun simpanTransaksi(cartlist: List<Cart>, jumlahBayar: Int) {
-        if (cartlist.isNotEmpty()) {
-            viewModel.selesaiTransaksi(jumlahBayar).observe(viewLifecycleOwner) { resource ->
-                when (resource.status) {
-                    Status.LOADING -> {
-                        binding.btnBayar.isEnabled = false
-                    }
-                    Status.SUCCESS -> {
-                        val alertBinding = DialogTransactionSuccessBinding.inflate(layoutInflater)
+    private fun simpanTransaksi(jumlahBayar: Int) {
+        viewModel.selesaiTransaksi(jumlahBayar).observe(viewLifecycleOwner) { resource ->
+            when (resource.status) {
+                Status.LOADING -> {
+                    binding.btnBayar.isEnabled = false
+                }
+                Status.SUCCESS -> {
+                    val alertBinding = DialogTransactionSuccessBinding.inflate(layoutInflater)
 
-                        val successDialog =
-                            AlertDialog.Builder(requireActivity()).also {
-                                it.setView(alertBinding.root)
-                                it.setCancelable(false)
-                            }.create()
-                        alertBinding.btnCetakStruk.setOnClickListener {
-                            printStruk(resource.data!!)
-                        }
-                        alertBinding.btnTutup.setOnClickListener {
-                            successDialog.cancel()
-                            viewModel.clearCart()
-                        }
-                        binding.btnBayar.isEnabled = true
-                        successDialog.show()
+                    val successDialog =
+                        AlertDialog.Builder(requireActivity()).also {
+                            it.setView(alertBinding.root)
+                            it.setCancelable(false)
+                        }.create()
+                    alertBinding.btnCetakStruk.setOnClickListener {
+                        printStruk(resource.data!!)
+                    }
+                    alertBinding.btnTutup.setOnClickListener {
+                        successDialog.cancel()
+                        viewModel.clearCart()
+                    }
+                    binding.btnBayar.isEnabled = true
+                    successDialog.show()
 
 
-                    }
-                    Status.ERROR -> {
-                        Snackbar.make(
-                            binding.root,
-                            "Gagal menyimpan transaksi",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                    }
+                }
+                Status.ERROR -> {
+                    Snackbar.make(
+                        binding.root,
+                        "Gagal menyimpan transaksi",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
