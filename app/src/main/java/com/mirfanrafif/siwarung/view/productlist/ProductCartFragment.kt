@@ -68,7 +68,8 @@ class ProductCartFragment : Fragment() {
         binding.rvCart.adapter = adapter
         binding.rvCart.layoutManager = LinearLayoutManager(context)
         if (activity != null) {
-            viewModel.getCart().observe(viewLifecycleOwner) { cartlist ->
+            viewModel.products.observe(viewLifecycleOwner) { products ->
+                val cartlist = products.data?.filter { product -> product.count > 0 }
                 if(cartlist != null && cartlist.isNotEmpty()) {
                     binding.llEmptyCart.visibility = View.GONE
                     binding.rvCart.visibility = View.VISIBLE
@@ -91,7 +92,7 @@ class ProductCartFragment : Fragment() {
         }
     }
 
-    private fun showDialogBayar(formattedTotal: String, total: Int, cartlist: List<Cart>) {
+    private fun showDialogBayar(formattedTotal: String, total: Int, cartlist: List<ProductCart>) {
         val alertBinding = DialogJumlahBayarBinding.inflate(layoutInflater)
         alertBinding.tvDialogTotal.text = formattedTotal
 

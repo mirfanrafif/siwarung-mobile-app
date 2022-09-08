@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mirfanrafif.siwarung.R
 import com.mirfanrafif.siwarung.SiwarungApp
@@ -53,7 +54,13 @@ class ProductListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (activity != null) {
-            adapter = ProductListAdapter(::addToCart)
+            adapter = ProductListAdapter()
+            adapter.eventListener = object : ProductListAdapter.ProductItemEventListener {
+                override fun onProductItemClick(product: Product) {
+                    addToCart(product)
+                }
+
+            }
             binding.rvProductList.layoutManager = GridLayoutManager(requireActivity(), 2)
             binding.rvProductList.adapter = adapter
 
@@ -79,30 +86,6 @@ class ProductListFragment : Fragment() {
                     }
                 }
 
-            viewModel.getCategory().observe(viewLifecycleOwner) {
-                adapter.setProductCategory(it)
-            }
-
-            viewModel.getKeyword().observe(viewLifecycleOwner) {
-                adapter.setSearchKeyword(it)
-            }
-
-            viewModel.getCart().observe(viewLifecycleOwner) { cartList ->
-                if (cartList != null && cartList.isNotEmpty()) {
-                    adapter.setCart(cartList)
-                    binding.llTotal.visibility = View.VISIBLE
-                    binding.tvTotal.text = NumberFormat.getCurrencyInstance(
-                        Locale("id", "ID")
-                    ).also { it.maximumFractionDigits = 0 }
-                        .format(cartList.map { it.product.price * it.count }
-                            .reduce { acc, i -> acc + i })
-                } else if (cartList != null) {
-                    adapter.setCart(cartList)
-                } else {
-                    binding.llTotal.visibility = View.GONE
-                }
-            }
-
             binding.edtSearchProduct.doOnTextChanged { text, _, _, _ ->
                 Log.d(ProductListFragment::class.simpleName, "Teks: $text")
                 viewModel.setKeyword(text.toString())
@@ -118,25 +101,27 @@ class ProductListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        binding.loadingProduct.visibility = View.VISIBLE
         viewModel.products.observe(viewLifecycleOwner) { productListResponse ->
-            when (productListResponse.status) {
-                Status.LOADING -> {
-                    binding.loadingProduct.visibility = View.VISIBLE
+            if(!productListResponse.loading) {
+                binding.loadingProduct.visibility = View.GONE
+            }
+            if(productListResponse.data != null) {
+                adapter.productListToShow = productListResponse.data
+                val cartList = productListResponse.data.filter {
+                    it.count > 0
                 }
-                Status.SUCCESS -> {
-                    binding.loadingProduct.visibility = View.GONE
-                    if (productListResponse.data != null) {
-                        adapter.setProductList(productListResponse.data!!)
-                        setSpinnerCategory(productListResponse.data!!)
-                    }
+                setSpinnerCategory(productList = productListResponse.data)
+                if ( cartList.isNotEmpty()) {
+                    binding.llTotal.visibility = View.VISIBLE
+                    binding.tvTotal.text = NumberFormat.getCurrencyInstance(
+                        Locale("id", "ID")
+                    ).also { it.maximumFractionDigits = 0 }
+                        .format(cartList.map { it.product.price * it.count }
+                            .reduce { acc, i -> acc + i })
                 }
-                Status.ERROR -> {
-                    binding.loadingProduct.visibility = View.GONE
-                    Snackbar.make(
-                        binding.root,
-                        productListResponse.message ?: "",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                else {
+                    binding.llTotal.visibility = View.GONE
                 }
             }
         }
@@ -147,9 +132,9 @@ class ProductListFragment : Fragment() {
     }
 
 
-    private fun setSpinnerCategory(productList: List<Product>) {
+    private fun setSpinnerCategory(productList: List<ProductCart>) {
         val categoryList =
-            productList.map { product -> product.category }
+            productList.map { product -> product.product.category }
         val finalCategory = arrayListOf<Category>(Category(0, "Semua Produk"))
         categoryList.forEach { category ->
             if (finalCategory.find { it.id == category.id } == null) {

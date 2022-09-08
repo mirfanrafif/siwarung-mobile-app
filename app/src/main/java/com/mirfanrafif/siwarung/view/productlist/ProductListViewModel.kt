@@ -7,6 +7,8 @@ import com.mirfanrafif.siwarung.core.domain.entities.Product
 import com.mirfanrafif.siwarung.core.domain.usecases.menu.MenuUseCase
 import com.mirfanrafif.siwarung.core.domain.usecases.user.getsession.GetSessionUseCase
 import com.mirfanrafif.siwarung.core.repository.Resource
+import com.mirfanrafif.siwarung.core.repository.Status
+import com.mirfanrafif.siwarung.utils.UiState
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -16,12 +18,27 @@ import javax.inject.Singleton
 
 @Singleton
 class ProductListViewModel @Inject constructor(private val menuUseCase: MenuUseCase, private val getSessionUseCase: GetSessionUseCase): ViewModel() {
-     val products: MutableLiveData<Resource<List<Product>>> = MutableLiveData()
+     val products: MutableLiveData<UiState<ArrayList<ProductCart>>> = MutableLiveData(UiState(loading = true))
 
     init {
         viewModelScope.launch {
             menuUseCase.getAllProducts().collect { productList ->
-                products.value = productList
+                when(productList.status) {
+                    Status.SUCCESS -> {
+                        val data = arrayListOf<ProductCart>()
+                        val cart = productList.data?.map {
+                            ProductCart(it, 0)
+                        }
+                        data.addAll(cart?: listOf())
+                        products.value = UiState(loading = false, data = data)
+                    }
+                    Status.ERROR -> {
+                        products.value = UiState(loading = false, message = productList.message)
+                    }
+                    else -> {
+
+                    }
+                }
             }
         }
     }
@@ -41,50 +58,48 @@ class ProductListViewModel @Inject constructor(private val menuUseCase: MenuUseC
     private val _cart = MutableLiveData<ArrayList<Cart>?>(arrayListOf())
     fun getCart(): LiveData<ArrayList<Cart>?> = _cart
     fun addProductToCart(product: Product) {
-        val cart = _cart.value
+        val cart = products.value?.data
         if(cart != null) {
             val findCart = cart.find { item -> item.product.id == product.id }
             if(findCart != null) {
                 val index = cart.indexOf(findCart)
-                cart[index].count++
-            }else{
-                cart.add(Cart(product, 1))
+                cart[index] = ProductCart(cart[index].product, cart[index].count + 1)
             }
-
-            _cart.postValue(cart)
+            products.postValue(UiState(loading = false, data =cart))
         }
     }
 
     fun addCount(product: Product) {
-        val cart = _cart.value
+        val cart = products.value?.data
         if(cart != null) {
             val findCart = cart.find { item -> item.product.id == product.id }
             if(findCart != null) {
                 val index = cart.indexOf(findCart)
-                cart[index].count++
+                cart[index] = ProductCart(cart[index].product, cart[index].count + 1)
             }
-
-            _cart.postValue(cart)
+            products.postValue(UiState(loading = false, data =cart))
         }
     }
 
     fun subsCount(product: Product) {
-        val cart = _cart.value
+        val cart = products.value?.data
         if(cart != null) {
             val findCart = cart.find { item -> item.product.id == product.id }
             if(findCart != null) {
                 val index = cart.indexOf(findCart)
-                cart[index].count--
-                if(cart[index].count == 0) cart.removeAt(index)
+                cart[index] = ProductCart(cart[index].product, cart[index].count - 1)
             }
-
-            _cart.postValue(cart)
+            products.postValue(UiState(loading = false, data =cart))
         }
     }
 
     fun selesaiTransaksi(jumlahBayar: Int): LiveData<Resource<TransactionResponse>> {
-        val cart = _cart.value
-        return menuUseCase.addTransactions(cart!!, jumlahBayar).asLiveData()
+        val cart =
+            products.value?.data?.map {
+            Cart(it.product, it.count)
+        }?.filter { it.count > 0 }
+
+        return menuUseCase.addTransactions(cart ?: arrayListOf(), jumlahBayar).asLiveData()
     }
 
     fun clearCart() {

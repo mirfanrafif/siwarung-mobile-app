@@ -13,9 +13,9 @@ import kotlin.collections.ArrayList
 class ProductCartAdapter(private val viewModel: ProductListViewModel) :
     RecyclerView.Adapter<ProductCartAdapter.ProductCartViewHolder>() {
 
-    private val cartList: ArrayList<Cart> = arrayListOf()
+    private val cartList: ArrayList<ProductCart> = arrayListOf()
 
-    fun setProductList(newProductList: List<Cart>) {
+    fun setProductList(newProductList: List<ProductCart>) {
         cartList.clear()
         cartList.addAll(newProductList)
         notifyDataSetChanged()
@@ -24,7 +24,7 @@ class ProductCartAdapter(private val viewModel: ProductListViewModel) :
 
     inner class ProductCartViewHolder(private val binding: ItemCartBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(cart: Cart) {
+        fun bind(cart: ProductCart) {
             binding.tvCartItemName.text = cart.product.name
             binding.tvCartItemPrice.text = CurrencyHelper.formatPrice(cart.product.price)
             binding.tvCartCount.text = "Jumlah: ${cart.count}"
